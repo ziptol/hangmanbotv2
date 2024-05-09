@@ -5,6 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import asyncio
 import hangmanGame
+import leaderboard as lb
 
 # grab env variables
 load_dotenv()
@@ -12,6 +13,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 # settings
 WORDLISTFILENAME = "english-nouns.txt"
+LEADERBOARDFILENAME = "leaderboard.txt"
 COMMANDPREFIX = "?"
 
 class MyClient(discord.Client):
@@ -70,6 +72,7 @@ class MyClient(discord.Client):
                         self.hangGame = hangmanGame.HG(self.wordlist, 6)
                         homeMessage = await message.channel.send(self.hangGame.display()[1])
                         self.hangGame.setHomeMessage(homeMessage)
+                        print(self.hangGame.getWord())
                     # if there's an active game, tell players to end it
                     else:
                         await message.channel.send("There's already an active game dumbass, use !hangstop to end it")
@@ -88,6 +91,9 @@ class MyClient(discord.Client):
                     # Check for win or loss
                     if(guessReturn[0] == 1 or guessReturn[0] == 2):
                         self.hangGame = None
+                        # If won, add to leaderboard
+                        if(guessReturn[0] == 1):
+                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.mention),1)
                     
                 # End Game
                 case "hangstop":
@@ -96,6 +102,13 @@ class MyClient(discord.Client):
                         await message.channel.send("There's no game going, but I guess I can try...")
                     await message.channel.send("Ending game!")
                     self.hangGame = None
+
+                case "leaderboard":
+                    leadermessage = "**Leaderboard:**\n"
+                    for line in lb.getLeaderboard(LEADERBOARDFILENAME):
+                        leadermessage += str(line[0])+": "+str(line[1])+"\n"
+
+                    await message.channel.send(leadermessage)
 
                 # ------------------------------- Trash Cleanup ------------------------------ #
                 case "help":    
