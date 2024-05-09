@@ -12,7 +12,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 # settings
 WORDLISTFILENAME = "english-nouns.txt"
-COMMANDPREFIX = "!"
+COMMANDPREFIX = "?"
 
 class MyClient(discord.Client):
 
@@ -54,11 +54,12 @@ class MyClient(discord.Client):
 
                 # ------------------------------- Misc Commands ------------------------------ #
                 case "hi":
+                    print("Hi command recieved")
                     await message.channel.send("Wassup")
                 
                 case "durv":
                     embed = discord.Embed()
-                    embed.set_image(url="https://i.pinimg.com/564x/b6/b5/57/b6b5573f8672e1d4f8dd20990f2bc866.jpg")
+                    embed.set_image(url="https://media.discordapp.net/attachments/540314464994459656/947874538291597373/3A12A02F-065E-4EE2-981A-7B3590FE5A8B.gif?ex=663d9134&is=663c3fb4&hm=727946ebf7f38be776f69c6cab8ed8e354d88f54f63305d445ed3798b93acaac&=&width=540&height=720")
                     await message.channel.send(embed=embed)
 
                 # ----------------------------- Hangman Commands ----------------------------- #
@@ -99,9 +100,6 @@ class MyClient(discord.Client):
                 # ------------------------------- Trash Cleanup ------------------------------ #
                 case "help":    
                     await message.channel.send("I cant be bothered tbh")
-
-                case _:
-                    await message.channel.send(f'Invalid command, use {COMMANDPREFIX}help for a list of commands')
 
 
 # set intents
