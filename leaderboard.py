@@ -9,7 +9,7 @@ def getLeaderboard(filename):
     f.close()
     # format score - remove newline, change to int
     for entry in leaderboard:
-        entry[1] = int(entry[1][0])
+        entry[1] = int(entry[1].replace("\n",""))
     return leaderboard
 
 def setLeaderboard(filename, leaderboard):
@@ -26,13 +26,18 @@ def incLeaderboard(filename, playername, score):
         # if player in list, increment their score
         pindex = [row[0] for row in leaderboard].index(playername)
         leaderboard[pindex][1] += score
+        leaderboard = sortLeaderboard(leaderboard)
         setLeaderboard(filename, leaderboard)
         return True
     except:
         # if player not found, return add them to the leaderboard
         leaderboard.append([playername, score])
+        leaderboard = sortLeaderboard(leaderboard)
         setLeaderboard(filename, leaderboard)
         return False
 
 def clearLeaderboard(filename):
     open(filename, "w").close()
+
+def sortLeaderboard(leaderboard):
+    return sorted(leaderboard, key=lambda x: x[1], reverse=True)
