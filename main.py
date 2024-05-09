@@ -79,6 +79,9 @@ class MyClient(discord.Client):
                     embed = discord.Embed()
                     embed.set_image(url="attachment://nwalkpie.png")                    
                     await message.channel.send(file=file, embed=embed)
+                
+                case "slime":
+                    await message.channel.send("https://www.amazon.com/Awkward-Styles-Autism-T-Shirt-Toddler/dp/B08534BD4T/ref=sr_1_2_sspa?crid=W1GA96OIR4US&dib=eyJ2IjoiMSJ9.Hobyjo941-GLgqwSbPROaT54QEaW0pQjpmzzaw6q3ALr_SViuIaaAsAeoOxvZGbly-RinWi7GU_c-7lfQh_7HMcqXdAXaKLVce7wu67onmPswvt6nxml_14vYWlLwd-zZOQq0W04W8oGbroix9eSY7sjSA0PiWPNk7f11jMqIejgDoBxbkEFr8KDGkTIdN1GHRU40fHaS68_RQValzdBvFxl7WmlMtodsaiQpz-_pP7A-iIPMuTY7apmvvRn5qurvsNch7fv-Xjanhx5QSAIbPnCS6j9f5MPDRQjOmRNycc.MoHsDoOs9MjcJ6CqYXngr89Q7ttSMCw7TqbPxPqAZU8&dib_tag=se&keywords=autism+shirt&qid=1715286134&sprefix=autism+shirt%2Caps%2C107&sr=8-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1")
 
                 # ----------------------------- Hangman Commands ----------------------------- #
                 # Start Game
