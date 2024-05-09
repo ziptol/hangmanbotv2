@@ -69,26 +69,18 @@ class MyClient(discord.Client):
                     if(self.hangGame == None):
                         await message.channel.send("There's no game, use !hangman to start one!")
                         return
-
                     # Run hangman guess code
                     guessVal = message.content.split(" ")[1]
                     guessReturn = self.hangGame.guess(guessVal)
-
                     # Display game board
                     await message.channel.send(guessReturn[1])
-
                     # Check for win or loss
                     if(guessReturn[0] == 1 or guessReturn[0] == 2):
-                        if(guessReturn[0]==1):
-                            await message.channel.send("GAME OVER YOU WIN")
-                            
-                        if(guessReturn[0]==2):
-                            await message.channel.send("GAME OVER YOU LOSE\nThe word was: "+self.hangGame.getWord())
-
                         self.hangGame = None
                     
 
                 case "hangstop":
+                    # If no active game
                     if(self.hangGame == None):
                         await message.channel.send("There's no game going, but I guess I can try...")
                     await message.channel.send("Ending game!")

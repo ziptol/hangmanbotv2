@@ -1,5 +1,56 @@
 import random
 
+HANGMANPICS = ['''
+  +----+
+  |    |
+       |
+       |
+       |
+       |
+=========''', '''
+  +----+
+  |    |
+  O    |
+       |
+       |
+       |
+=========''', '''
+  +----+
+  |    |
+  O    |
+  |    |
+       |
+       |
+=========''', '''
+  +----+
+  |    |
+  O    |
+ /|    |
+       |
+       |
+=========''', '''
+  +----+
+  |    |
+  O    |
+ /|\   |
+       |
+       |
+=========''', '''
+  +----+
+  |    |
+  O    |
+ /|\   | 
+ /     |
+       |
+=========''', '''
+  +----+
+  |    |
+  O    |
+ /|\   |
+ / \   |
+       |
+=========''']
+
 class HG():
     def __init__(self, wordList, allowedGuesses):
 
@@ -38,6 +89,12 @@ class HG():
             if(self.numWrongGuesses>=self.allowedGuesses):
                 self.gameState = 2
         
+        if(self.gameState == 1):
+            return self.display("GAME OVER YOU WIN")
+        
+        if(self.gameState == 2):
+            return self.display("GAME OVER YOU LOSE\nThe word was: "+self.getWord())
+        
         return self.display()
 
     # Display hangman game string for user
@@ -55,7 +112,7 @@ class HG():
                 dispWord = dispWord+"\_  "
 
         # full message
-        displayMessage = (guessState+"\n"+dispWord+"\n"+userMessage)
+        displayMessage = (HANGMANPICS[self.numWrongGuesses]+"\n"+dispWord+"\n"+userMessage)
         return ([self.gameState, displayMessage])
  
 
