@@ -119,5 +119,11 @@ class HG():
     def getWord(self):
         return self.word
     
+    def setHomeMessage(self, messageID):
+        self.homeMessage = messageID
+    
+    def getHomeMessage(self):
+        return self.homeMessage
+    
     
         

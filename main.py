@@ -38,7 +38,9 @@ class MyClient(discord.Client):
     async def on_ready(self):
         print(f'Up in this shit. Logged in as {self.user}')
 
-    # command handling
+    # ---------------------------------------------------------------------------- #
+    #                                Command Handler                               #
+    # ---------------------------------------------------------------------------- #
     async def on_message(self,message):
         # ignore own message
         if message.author.id == self.user.id:
@@ -50,20 +52,23 @@ class MyClient(discord.Client):
             command = (message.content.split(" ")[0])[1:]
             match command:
 
-                # Misc Commands
+                # ------------------------------- Misc Commands ------------------------------ #
                 case "hi":
                     await message.channel.send("Wassup")
 
-                # Hangman Commands
+                # ----------------------------- Hangman Commands ----------------------------- #
+                # Start Game
                 case "hangman":
                     # if no active game, start one
                     if(self.hangGame == None):
                         self.hangGame = hangmanGame.HG(self.wordlist, 6)
-                        await message.channel.send(self.hangGame.display()[1])
+                        homeMessage = await message.channel.send(self.hangGame.display()[1])
+                        self.hangGame.setHomeMessage(homeMessage)
                     # if there's an active game, tell players to end it
                     else:
                         await message.channel.send("There's already an active game dumbass, use !hangstop to end it")
                 
+                # Guess
                 case "guess":
                     # if no active game, tell players to start one
                     if(self.hangGame == None):
@@ -73,18 +78,25 @@ class MyClient(discord.Client):
                     guessVal = message.content.split(" ")[1]
                     guessReturn = self.hangGame.guess(guessVal)
                     # Display game board
-                    await message.channel.send(guessReturn[1])
+                    await self.hangGame.getHomeMessage().edit(content = guessReturn[1])
                     # Check for win or loss
                     if(guessReturn[0] == 1 or guessReturn[0] == 2):
                         self.hangGame = None
                     
-
+                # End Game
                 case "hangstop":
                     # If no active game
                     if(self.hangGame == None):
                         await message.channel.send("There's no game going, but I guess I can try...")
                     await message.channel.send("Ending game!")
                     self.hangGame = None
+
+                # ------------------------------- Trash Cleanup ------------------------------ #
+                case "help":    
+                    await message.channel.send("I cant be bothered tbh")
+
+                case _:
+                    await message.channel.send(f'Invalid command, use {COMMANDPREFIX}help for a list of commands')
 
 
 # set intents
