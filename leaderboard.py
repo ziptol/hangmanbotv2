@@ -1,5 +1,3 @@
-import numpy as np
-
 def getLeaderboard(filename):
     # pull leaderboard file
     leaderboard = []
