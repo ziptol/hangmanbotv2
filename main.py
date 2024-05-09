@@ -10,13 +10,15 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 # settings
-WORDLISTFILENAME = "english-nouns.txt"
+WORDLISTFILENAME = "assets/english-nouns.txt"
 LEADERBOARDFILENAME = "leaderboard.txt"
 COMMANDPREFIX = "?"
 
 class MyClient(discord.Client):
 
-    # initialize variables
+    # ---------------------------------------------------------------------------- #
+    #                                Initialization                                #
+    # ---------------------------------------------------------------------------- #
     def __init__(self, intents, wordListFileName, commandPrefix):
         
         discord.Client.__init__(self, intents=intents)
@@ -63,9 +65,7 @@ class MyClient(discord.Client):
                     await message.channel.send(embed=embed)
 
                 case "george":
-                    embed = discord.Embed()
-                    embed.set_image(url="https://media.discordapp.net/attachments/540718016623804456/618860517510873129/image0.jpg?ex=663e59c5&is=663d0845&hm=1fcb6d97d1777574f60c126071305f5e0423d7915b6f022d5b14e6644e129481&=&format=webp&width=1659&height=993")
-                    await message.channel.send(embed=embed)
+                    await message.channel.send("https://youtu.be/AwZG9NLAGmg")
 
                 # ----------------------------- Hangman Commands ----------------------------- #
                 # Start Game
