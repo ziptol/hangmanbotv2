@@ -68,26 +68,37 @@ class HG():
         
 
     def guess(self, guessLetter):
-        if not (len(guessLetter)==1):
-            return self.display("Invalid Guess")
-
-        # if letter has already been guessed
-        if(guessLetter in self.guessed):
-            return self.display("Guess has already been made")
-        
-        # add letter to guessed list
-        self.guessed.append(guessLetter)
-
-        if(guessLetter in self.word):
-            # if player has won
-            if(set(self.word).issubset(self.guessed)):
+        # if guess is greater than 1 letter, count as multiguess
+        if len(guessLetter)>1:
+            # player guesses word, full win
+            if(guessLetter==self.word):
                 self.gameState = 1
+                for x in guessLetter: 
+                    self.guessed.append(x)
+                    
+            
+            else:
+                self.numWrongGuesses+=1
+                return self.display("Multiletter guess, WRONG!")
+
         else:
-            # increment number of wrong guesses
-            self.numWrongGuesses += 1
-            # check for loss 
-            if(self.numWrongGuesses>=self.allowedGuesses):
-                self.gameState = 2
+            # if letter has already been guessed
+            if(guessLetter in self.guessed):
+                return self.display("Guess has already been made")
+            
+            # add letter to guessed list
+            self.guessed.append(guessLetter)
+
+            if(guessLetter in self.word):
+                # if player has won
+                if(set(self.word).issubset(self.guessed)):
+                    self.gameState = 1
+            else:
+                # increment number of wrong guesses
+                self.numWrongGuesses += 1
+                # check for loss 
+                if(self.numWrongGuesses>=self.allowedGuesses):
+                    self.gameState = 2
         
         if(self.gameState == 1):
             return self.display("GAME OVER YOU WIN")

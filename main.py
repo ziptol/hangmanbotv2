@@ -94,13 +94,13 @@ class MyClient(discord.Client):
                         print(self.hangGame.getWord())
                     # if there's an active game, tell players to end it
                     else:
-                        await message.channel.send("There's already an active game dumbass, use !hangstop to end it")
+                        await message.channel.send(f"There's already an active game dumbass, use {COMMANDPREFIX}hangstop to end it")
                 
                 # Guess
                 case "guess":
                     # if no active game, tell players to start one
                     if(self.hangGame == None):
-                        await message.channel.send("There's no game, use !hangman to start one!")
+                        await message.channel.send(f"There's no game, use {COMMANDPREFIX}hangman to start one!")
                         return
                     # Run hangman guess code
                     guessVal = message.content.split(" ")[1]
