@@ -64,6 +64,11 @@ class MyClient(discord.Client):
                     embed.set_image(url="https://media.discordapp.net/attachments/540314464994459656/947874538291597373/3A12A02F-065E-4EE2-981A-7B3590FE5A8B.gif?ex=663d9134&is=663c3fb4&hm=727946ebf7f38be776f69c6cab8ed8e354d88f54f63305d445ed3798b93acaac&=&width=540&height=720")
                     await message.channel.send(embed=embed)
 
+                case "george":
+                    embed = discord.Embed()
+                    embed.set_image(url="https://media.discordapp.net/attachments/540718016623804456/618860517510873129/image0.jpg?ex=663e59c5&is=663d0845&hm=1fcb6d97d1777574f60c126071305f5e0423d7915b6f022d5b14e6644e129481&=&format=webp&width=1659&height=993")
+                    await message.channel.send(embed=embed)
+
                 # ----------------------------- Hangman Commands ----------------------------- #
                 # Start Game
                 case "hangman":
