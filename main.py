@@ -4,6 +4,7 @@ import discord
 from dotenv import load_dotenv
 import hangmanGame
 import leaderboard as lb
+import random
 
 # grab env variables
 load_dotenv()
@@ -67,6 +68,18 @@ class MyClient(discord.Client):
                 case "george":
                     await message.channel.send("https://youtu.be/AwZG9NLAGmg")
 
+                case "dice":
+                    file = discord.File("assets/fuckDice.jpg")
+                    embed = discord.Embed()
+                    embed.set_image(url="attachment://fuckDice.jpg")                    
+                    await message.channel.send(file=file, embed=embed)
+                
+                case "nickwalkpie":
+                    file = discord.File("assets/nwalkpie.png")
+                    embed = discord.Embed()
+                    embed.set_image(url="attachment://nwalkpie.png")                    
+                    await message.channel.send(file=file, embed=embed)
+
                 # ----------------------------- Hangman Commands ----------------------------- #
                 # Start Game
                 case "hangman":
@@ -112,6 +125,17 @@ class MyClient(discord.Client):
                         leadermessage += str(line[0])+": "+str(line[1])+"\n"
 
                     await message.channel.send(leadermessage)
+
+                # --------------------------------- Dice Bot --------------------------------- #
+                case "roll":
+                    rollVal = message.content.split(" ")[1]
+                    try:
+                        rollInt = int(rollVal)
+                    except:
+                        await message.channel.send("Invalid roll")
+                        return
+                    await message.channel.send(f"Rolling d{rollInt}...")
+                    await message.channel.send("You rolled: "+str(random.randint(1,rollInt)))
 
                 # ------------------------------- Trash Cleanup ------------------------------ #
                 case "help":    

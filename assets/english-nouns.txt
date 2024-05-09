@@ -1082,6 +1082,7 @@ ruin
 ship
 skirt
 slice
+slime
 snow
 specialist
 stroke
