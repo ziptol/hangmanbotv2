@@ -55,6 +55,11 @@ class MyClient(discord.Client):
                 # ------------------------------- Misc Commands ------------------------------ #
                 case "hi":
                     await message.channel.send("Wassup")
+                
+                case "durv":
+                    embed = discord.Embed()
+                    embed.set_image(url="https://i.pinimg.com/564x/b6/b5/57/b6b5573f8672e1d4f8dd20990f2bc866.jpg")
+                    await message.channel.send(embed=embed)
 
                 # ----------------------------- Hangman Commands ----------------------------- #
                 # Start Game
