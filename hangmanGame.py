@@ -5,15 +5,16 @@ class HG():
 
         # choose a word
         wordlistIndex = random.randint(0,len(wordList))
-        self.word = wordList[wordlistIndex]
+        self.word = wordList[wordlistIndex][:-1]
+
+        # setup variables
         self.homeMessage = ""
         self.allowedGuesses = allowedGuesses
         self.numWrongGuesses = 0
-        self.gameWon = False
-        self.gameLost = False
-
-        # establish variables
+        # Active = 0, Won = 1, Lost = 2
+        self.gameState = 0 
         self.guessed = []
+        
 
     def guess(self, guessLetter):
         if not (len(guessLetter)==1):
@@ -29,23 +30,23 @@ class HG():
         if(guessLetter in self.word):
             # if player has won
             if(set(self.word).issubset(self.guessed)):
-                self.gameWon = True
+                self.gameState = 1
         else:
             # increment number of wrong guesses
             self.numWrongGuesses += 1
             # check for loss 
             if(self.numWrongGuesses>=self.allowedGuesses):
-                self.gameLost = True
+                self.gameState = 2
         
         return self.display()
 
     # Display hangman game string for user
     def display(self, userMessage=""):
-        # info display
-        winState = "Won="+str(self.gameWon)+" Loss="+str(self.gameLost)
+        # Info display for debug, will be replaced
+        winState = "Game state = "+str(self.gameState)
         guessState = str(self.numWrongGuesses)+"/"+str(self.allowedGuesses)
         
-        # word display
+        # Concatinate word display
         dispWord = ""
         for letter in self.word:
             if(letter in self.guessed):
@@ -54,15 +55,12 @@ class HG():
                 dispWord = dispWord+"\_  "
 
         # full message
-        return (winState+"\n"+guessState+"\n"+dispWord+"\n"+userMessage)
+        displayMessage = (guessState+"\n"+dispWord+"\n"+userMessage)
+        return ([self.gameState, displayMessage])
+ 
 
     def getWord(self):
         return self.word
     
-    def getGameWon(self):
-        return self.gameWon
-
-    def getGameLost(self):
-        return self.gameLost
     
         

@@ -31,6 +31,9 @@ class MyClient(discord.Client):
             self.wordlist.append(line)
         wordlistFile.close()
 
+        # hangman
+        self.hangGame = None
+
     # on ready
     async def on_ready(self):
         print(f'Up in this shit. Logged in as {self.user}')
@@ -53,12 +56,43 @@ class MyClient(discord.Client):
 
                 # Hangman Commands
                 case "hangman":
-                    self.hangGame = hangmanGame.HG(self.wordlist, 6)
-                    await message.channel.send(self.hangGame.display())
+                    # if no active game, start one
+                    if(self.hangGame == None):
+                        self.hangGame = hangmanGame.HG(self.wordlist, 6)
+                        await message.channel.send(self.hangGame.display()[1])
+                    # if there's an active game, tell players to end it
+                    else:
+                        await message.channel.send("There's already an active game dumbass, use !hangstop to end it")
                 
                 case "guess":
+                    # if no active game, tell players to start one
+                    if(self.hangGame == None):
+                        await message.channel.send("There's no game, use !hangman to start one!")
+                        return
+
+                    # Run hangman guess code
                     guessVal = message.content.split(" ")[1]
-                    await message.channel.send(self.hangGame.guess(guessVal))
+                    guessReturn = self.hangGame.guess(guessVal)
+
+                    # Display game board
+                    await message.channel.send(guessReturn[1])
+
+                    # Check for win or loss
+                    if(guessReturn[0] == 1 or guessReturn[0] == 2):
+                        if(guessReturn[0]==1):
+                            await message.channel.send("GAME OVER YOU WIN")
+                            
+                        if(guessReturn[0]==2):
+                            await message.channel.send("GAME OVER YOU LOSE\nThe word was: "+self.hangGame.getWord())
+
+                        self.hangGame = None
+                    
+
+                case "hangstop":
+                    if(self.hangGame == None):
+                        await message.channel.send("There's no game going, but I guess I can try...")
+                    await message.channel.send("Ending game!")
+                    self.hangGame = None
 
 
 # set intents
