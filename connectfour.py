@@ -39,7 +39,7 @@ class C4():
         
         return ([self.gamestate, boarddisplay])
 
-    def droppiece(self, row):
+    def droppiece(self, row, player):
         
         try:
             # Convert from letter row to int value 0-6
@@ -62,7 +62,7 @@ class C4():
                 self.piece = int(not self.piece)
 
                 # Check for win, display board
-                return (self.checkwin())
+                return (self.checkwin(player, f"{player} dropped a piece in row {row}"))
             
             # If no piece is found, place in bottom slot
             elif(i == len(self.board)-1):
@@ -71,43 +71,43 @@ class C4():
                 self.piece = int(not self.piece)
 
                 # Check for win, display board
-                return (self.checkwin())
+                return (self.checkwin(player, f"{player} dropped a piece in row {row}"))
     
-    def checkwin(self):
+    def checkwin(self, player, message):
 
         # Check rows for a win
         for i in range(self.rows):
             for j in range(self.cols - 3):
                 if self.board[i][j] != "#" and self.board[i][j] == self.board[i][j+1] == self.board[i][j+2] == self.board[i][j+3]:
                     self.gamestate = 1
-                    return self.display("YOU WIN")
+                    return self.display(f"{player} WINS!")
 
         # Check columns for a win
         for i in range(self.rows - 3):
             for j in range(self.cols):
                 if self.board[i][j] != "#" and self.board[i][j] == self.board[i+1][j] == self.board[i+2][j] == self.board[i+3][j]:
                     self.gamestate = 1
-                    return self.display("YOU WIN")
+                    return self.display(f"{player} WINS!")
 
         # Check diagonals (positive slope) for a win
         for i in range(self.rows - 3):
             for j in range(self.cols - 3):
                 if self.board[i][j] != "#" and self.board[i][j] == self.board[i+1][j+1] == self.board[i+2][j+2] == self.board[i+3][j+3]:
                     self.gamestate = 1
-                    return self.display("YOU WIN")
+                    return self.display(f"{player} WINS!")
 
         # Check diagonals (negative slope) for a win
         for i in range(3, self.rows):
             for j in range(self.cols - 3):
                 if self.board[i][j] != "#" and self.board[i][j] == self.board[i-1][j+1] == self.board[i-2][j+2] == self.board[i-3][j+3]:
                     self.gamestate = 1
-                    return self.display("YOU WIN")
+                    return self.display(f"{player} WINS!")
         
         # Check to make sure all slots aren't filled
         for i in range(self.rows):
             for j in range(self.cols):
                 if self.board[i][j] != "#":
-                    return self.display()
+                    return self.display(message)
         
         self.gamestate = 2
         return self.display("This shit full, game over nobody wins")

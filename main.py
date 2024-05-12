@@ -146,7 +146,7 @@ class MyClient(discord.Client):
                         return
                     # get desired row
                     rowDrop = message.content.split(" ")[1]
-                    dropReturn = self.conGame.droppiece(rowDrop)
+                    dropReturn = self.conGame.droppiece(rowDrop,message.author.name)
                     # display game board
                     await self.conGame.getHomeMessage().edit(content = dropReturn[1])
                     # Check for win or loss
@@ -154,6 +154,8 @@ class MyClient(discord.Client):
                         self.conGame = None
                         if(dropReturn[0] == 1):
                             lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.name),C4WINPOINTS)
+
+                    await message.delete()
 
                 case "connectstop":
                     # If no active game
