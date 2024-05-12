@@ -1,4 +1,5 @@
-def getLeaderboard(filename):
+
+def getLeaderboard(filename): 
     # pull leaderboard file
     leaderboard = []
     with open(filename, 'r') as f:

@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import hangmanGame
 import leaderboard as lb
 import random
+import connectfour
 
 # grab env variables
 load_dotenv()
@@ -14,6 +15,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 WORDLISTFILENAME = "assets/english-nouns.txt"
 LEADERBOARDFILENAME = "leaderboard.txt"
 COMMANDPREFIX = "?"
+C4WINPOINTS = 3
+HMWINPOINTS = 1
 
 class MyClient(discord.Client):
 
@@ -34,8 +37,9 @@ class MyClient(discord.Client):
             self.wordlist.append(line)
         wordlistFile.close()
 
-        # hangman
+        # games
         self.hangGame = None
+        self.conGame = None
 
     # on ready
     async def on_ready(self):
@@ -84,7 +88,7 @@ class MyClient(discord.Client):
                     await message.channel.send("https://www.amazon.com/Awkward-Styles-Autism-T-Shirt-Toddler/dp/B08534BD4T/ref=sr_1_2_sspa?crid=W1GA96OIR4US&dib=eyJ2IjoiMSJ9.Hobyjo941-GLgqwSbPROaT54QEaW0pQjpmzzaw6q3ALr_SViuIaaAsAeoOxvZGbly-RinWi7GU_c-7lfQh_7HMcqXdAXaKLVce7wu67onmPswvt6nxml_14vYWlLwd-zZOQq0W04W8oGbroix9eSY7sjSA0PiWPNk7f11jMqIejgDoBxbkEFr8KDGkTIdN1GHRU40fHaS68_RQValzdBvFxl7WmlMtodsaiQpz-_pP7A-iIPMuTY7apmvvRn5qurvsNch7fv-Xjanhx5QSAIbPnCS6j9f5MPDRQjOmRNycc.MoHsDoOs9MjcJ6CqYXngr89Q7ttSMCw7TqbPxPqAZU8&dib_tag=se&keywords=autism+shirt&qid=1715286134&sprefix=autism+shirt%2Caps%2C107&sr=8-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1")
 
                 # ----------------------------- Hangman Commands ----------------------------- #
-                # Start Game
+                # Start a game of hangman, takes no parameters
                 case "hangman":
                     # if no active game, start one
                     if(self.hangGame == None):
@@ -96,7 +100,7 @@ class MyClient(discord.Client):
                     else:
                         await message.channel.send(f"There's already an active game dumbass, use {COMMANDPREFIX}hangstop to end it")
                 
-                # Guess
+                # Guess a hangman word, takes either a single letter or the full word
                 case "guess":
                     # if no active game, tell players to start one
                     if(self.hangGame == None):
@@ -112,9 +116,9 @@ class MyClient(discord.Client):
                         self.hangGame = None
                         # If won, add to leaderboard
                         if(guessReturn[0] == 1):
-                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.mention),1)
-                    
-                # End Game
+                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.mention),HMWINPOINTS)
+                
+                # Stop hangman game, takes no parameters
                 case "hangstop":
                     # If no active game
                     if(self.hangGame == None):
@@ -122,14 +126,44 @@ class MyClient(discord.Client):
                     await message.channel.send("Ending game!")
                     self.hangGame = None
 
-                case "leaderboard":
-                    leadermessage = "**Leaderboard:**\n"
-                    for line in lb.getLeaderboard(LEADERBOARDFILENAME):
-                        leadermessage += str(line[0])+": "+str(line[1])+"\n"
+                # --------------------------- Connect Four Commands -------------------------- #
+                # Start a game of connect four
+                case "connectfour":
+                    # if no active game
+                    if self.conGame == None:
+                        # create new connect four game 
+                        self.conGame = connectfour.C4()
+                        homeMessage = await message.channel.send(self.conGame.display()[1])
+                        self.conGame.setHomeMessage(homeMessage)
+                    # if there is an active game
+                    else:
+                        await message.channel.send(f"There's a game going! To stop it use {COMMANDPREFIX}connectstop")
+                
+                case "drop":
+                    # if no active game, tell players to start one
+                    if(self.conGame == None):
+                        await message.channel.send(f"There's no game, use {COMMANDPREFIX}connectfour to start one!")
+                        return
+                    # get desired row
+                    rowDrop = message.content.split(" ")[1]
+                    dropReturn = self.conGame.droppiece(rowDrop)
+                    # display game board
+                    await self.conGame.getHomeMessage().edit(content = dropReturn[1])
+                    # Check for win or loss
+                    if(dropReturn[0] != 0):
+                        self.conGame = None
+                        if(dropReturn[0] == 1):
+                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.mention),C4WINPOINTS)
 
-                    await message.channel.send(leadermessage)
-
+                case "connectstop":
+                    # If no active game
+                    if(self.conGame == None):
+                        await message.channel.send("There's no game going, but I guess I can try...")
+                    await message.channel.send("Ending game!")
+                    self.conGame = None
+                
                 # --------------------------------- Dice Bot --------------------------------- #
+                # Roll dice, takes integer >= 1 
                 case "roll":
                     rollVal = message.content.split(" ")[1]
                     try:
@@ -140,9 +174,21 @@ class MyClient(discord.Client):
                     await message.channel.send(f"Rolling d{rollInt}...")
                     await message.channel.send("You rolled: "+str(random.randint(1,rollInt)))
 
-                # ------------------------------- Trash Cleanup ------------------------------ #
+                # ------------------------------- Utilities ------------------------------ #
+                # Display help message, takes no parameters
                 case "help":    
                     await message.channel.send("I cant be bothered tbh")
+
+                # Get leaderboard, takes no parameters
+                case "leaderboard":
+                    # display leaderboard 
+                    leadermessage = "**Leaderboard:**\n"
+                    for line in lb.getLeaderboard(LEADERBOARDFILENAME):
+                        leadermessage += str(line[0])+": "+str(line[1])+"\n"
+
+                    await message.channel.send(leadermessage)
+
+                
 
 
 # set intents
