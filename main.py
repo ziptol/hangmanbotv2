@@ -116,7 +116,7 @@ class MyClient(discord.Client):
                         self.hangGame = None
                         # If won, add to leaderboard
                         if(guessReturn[0] == 1):
-                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.mention),HMWINPOINTS)
+                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.name),HMWINPOINTS)
                 
                 # Stop hangman game, takes no parameters
                 case "hangstop":
@@ -153,7 +153,7 @@ class MyClient(discord.Client):
                     if(dropReturn[0] != 0):
                         self.conGame = None
                         if(dropReturn[0] == 1):
-                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.mention),C4WINPOINTS)
+                            lb.incLeaderboard(LEADERBOARDFILENAME,str(message.author.name),C4WINPOINTS)
 
                 case "connectstop":
                     # If no active game
