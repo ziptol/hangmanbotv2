@@ -72,7 +72,7 @@ class MyClient(discord.Client):
             now = datetime.now()
             print(now)
             # Set target time (5 seconds past midnight)
-            target_time = now.replace(hour=23, minute=56, second=0, microsecond=0)
+            target_time = now.replace(hour=0, minute=0, second=5, microsecond=0)
 
             # If time has passed today, schedule for tomorrow
             if now >= target_time:
